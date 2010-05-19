@@ -1,10 +1,24 @@
 #!/usr/bin/env python
 # encoding: utf-8
 """
-run.py
+    Copyright Russell Ferriday 2010 
+    russf@topia.com 
+    First release May 2010
 
-Created by Russ Ferriday on 2010-05-18.
-Copyright (c) 2010 Topia Systems. All rights reserved.
+    This file is part of ATTBillAnalysis.
+
+    ATTBillAnalysis is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ATTBillAnalysis is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ATTBillAnalysis.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import sys
