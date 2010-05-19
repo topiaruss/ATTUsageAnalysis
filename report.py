@@ -1,49 +1,75 @@
 """
->>> from attbill import Attbill
->>> bill = Attbill()
->>> bill.process('testreport.csv')
->>> directory = Directory('testdir.dir')
->>> report = Report(bill, directory=directory)
->>> print report
-<Report>
->>> for line in report.text():
-...   print line
-Directory:
-508-235-6915 Roger Smith
-508-235-7829 Jane Smith
-<BLANKLINE>
-Summary By User:
-Starting 2010-03-17 10:07:00, Ending 2010-04-03 17:48:00
-<BLANKLINE>
-Name: JANE SMITH, Number: 508-235-7829
-Calls In: 0, Out:10
-Texts In: 7, Out:3
-                          :    Calls     |    Texts    |  Text Sessions
-                          : From     To  | From    To  |   In   Out
- 508-235-6915 Roger Smith :           6  |    4     2  |    4     2
- 508-235-7829  Jane Smith :           1  |             |           
- 508-534-0399           - :           1  |             |           
- 508-704-1151           - :              |    3     1  |    1     1
- 508-748-9880           - :           2  |             |           
---------------------------------------------------------------------------------
-Name: ROGER SMITH, Number: 508-235-6915
-Calls In: 6, Out:4
-Texts In: 4, Out:10
-                          :    Calls     |    Texts    |  Text Sessions
-                          : From     To  | From    To  |   In   Out
- 480-786-7200           - :     1        |             |           
-        48368           - :              |    2        |    2      
- 508-235-6915 Roger Smith :           1  |             |           
- 508-235-7829  Jane Smith :     2        |    1     1  |    1     1
- 508-544-3223           - :           1  |             |           
- 508-546-3100           - :           1  |             |           
- 508-550-6500           - :           1  |             |           
- 508-704-0185           - :              |    1     3  |          1
- 508-704-1151           - :              |          3  |          3
- 508-927-5208           - :     2        |             |           
- 949-218-9820           - :     1        |             |           
-Data Transfer           - :              |          3  |          2
---------------------------------------------------------------------------------
+
+    Copyright Russell Ferriday 2010 
+    russf@topia.com 
+    First release May 2010
+
+    This file is part of ATTBillAnalysis.
+
+    ATTBillAnalysis is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ATTBillAnalysis is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ATTBillAnalysis.  If not, see <http://www.gnu.org/licenses/>.
+
+Doctests
+--------
+
+Now make a bill, and pass it to a new Report. Handing in a directory
+helps to interpret the traffic report.
+
+    >>> from attbill import Attbill
+    >>> bill = Attbill()
+    >>> bill.process('testreport.csv')
+    >>> directory = Directory('testdir.dir')
+    >>> report = Report(bill, directory=directory)
+    >>> print report
+    <Report>
+    >>> for line in report.text():
+    ...   print line
+    Directory:
+    508-235-6915 Roger Smith
+    508-235-7829 Jane Smith
+    <BLANKLINE>
+    Summary By User:
+    Starting 2010-03-17 10:07:00, Ending 2010-04-03 17:48:00
+    <BLANKLINE>
+    Name: JANE SMITH, Number: 508-235-7829
+    Calls In: 0, Out:10
+    Texts In: 7, Out:3
+                              :    Calls     |    Texts    |  Text Sessions
+                              : From     To  | From    To  |   In   Out
+     508-235-6915 Roger Smith :           6  |    4     2  |    4     2
+     508-235-7829  Jane Smith :           1  |             |           
+     508-534-0399           - :           1  |             |           
+     508-704-1151           - :              |    3     1  |    1     1
+     508-748-9880           - :           2  |             |           
+    --------------------------------------------------------------------------------
+    Name: ROGER SMITH, Number: 508-235-6915
+    Calls In: 6, Out:4
+    Texts In: 4, Out:10
+                              :    Calls     |    Texts    |  Text Sessions
+                              : From     To  | From    To  |   In   Out
+     480-786-7200           - :     1        |             |           
+            48368           - :              |    2        |    2      
+     508-235-6915 Roger Smith :           1  |             |           
+     508-235-7829  Jane Smith :     2        |    1     1  |    1     1
+     508-544-3223           - :           1  |             |           
+     508-546-3100           - :           1  |             |           
+     508-550-6500           - :           1  |             |           
+     508-704-0185           - :              |    1     3  |          1
+     508-704-1151           - :              |          3  |          3
+     508-927-5208           - :     2        |             |           
+     949-218-9820           - :     1        |             |           
+    Data Transfer           - :              |          3  |          2
+    --------------------------------------------------------------------------------
 
 """
 import datetime
@@ -66,6 +92,7 @@ class Directory(dict):
                     self[number] = name
     def __repr__(self):
         return '<Directory> entries: %s' % len(self)
+        
 class Report(object):
     def __init__(self,bill, directory=None):
         self.directory = directory or {}
@@ -74,12 +101,15 @@ class Report(object):
     def __repr__(self):
         return '<Report>'
     def p(self,line):
+        "Print a line to the print buffer"
         self.lines.append(line)
     def put_directory(self):
+        "Puts the directory into the print buffer"
         self.p('Directory:')
         for number, id in sorted(self.directory.items(), key=lambda i: i[0]):
             self.p('%12s %s' % (number, id))
     def do_summary(self):
+        "Puts a summary to print buffer"
         self.p('Summary By User:')
         self.put_timespan()
         self.p('')
@@ -102,7 +132,6 @@ class Report(object):
                     outcalls+=1
                     party['tocalls'] += 1
             for text in user.texts:
-                #import pdb; pdb.set_trace()
                 party = parties.setdefault(text.number, \
                         {'fromcalls':0, 'tocalls':0, \
                          'fromtexts':0, 'totexts':0,\
@@ -143,6 +172,7 @@ class Report(object):
                         ))
             self.p('-' * 80)            
     def put_timespan(self):
+        "Finds earliest and latest calls in the report, puts to print buffer"
         earliest = datetime.datetime.now()
         latest = datetime.datetime(2000,1,1)
         for user in self.bill.users.values():
@@ -157,9 +187,8 @@ class Report(object):
                 elif text.time > latest:
                     latest = text.time
         self.p('Starting %s, Ending %s' % (earliest, latest))    
-                    
-                   
     def text(self):
+        "generate a text report and return as a sequence of lines"
         self.put_directory();
         self.p('')
         self.do_summary()
