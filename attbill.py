@@ -4,22 +4,22 @@
     russf@topia.com 
     First release May 2010
 
-    This file is part of ATTBillAnalysis.
+    This file is part of ATTUsageAnalysis.
 
-    ATTBillAnalysis is free software: you can redistribute it and/or modify
+    ATTUsageAnalysis is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    ATTBillAnalysis is distributed in the hope that it will be useful,
+    ATTUsageAnalysis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with ATTBillAnalysis.  If not, see <http://www.gnu.org/licenses/>.
+    along with ATTUsageAnalysis.  If not, see <http://www.gnu.org/licenses/>.
       
-  This package reads ATT CSV formatted bills into a neat structure
+  This package reads ATT CSV formatted usage files into a neat structure
 
 DocTests
 --------
@@ -29,23 +29,23 @@ Check the date parser...
   >>> print maketime('03/17/2010','10:07PM')
   2010-03-17 22:07:00
   
-Create a bill and read a csv report into it...
+Create a usage object and read a csv report into it...
   
-  >>> bill = Attbill()
-  >>> bill.process('testreport.csv')
-  >>> print bill
+  >>> usage = AttUsage()
+  >>> usage.process('testreport.csv')
+  >>> print usage
   {'ROGER SMITH': <User> 'ROGER SMITH' at '508-235-7829', 'JANE SMITH': <User> 'JANE SMITH' at '508-235-6915'}
 
 Show that we have two users on the account...
   
-  >>> for user in bill.users.values():
+  >>> for user in usage.users.values():
   ...   print user
   <User> 'ROGER SMITH' at '508-235-7829'
   <User> 'JANE SMITH' at '508-235-6915'
   
 Look at the calls for the first user...
   
-  >>> for call in bill.users.values()[0].calls:
+  >>> for call in usage.users.values()[0].calls:
   ...   print call
   <Call> 2010-03-18 08:45:00 to   508-235-7829 == VMAIL CL lasting 1 min
   <Call> 2010-03-18 08:46:00 to   508-748-9880 == SAN LUS O CA lasting 2 min
@@ -60,7 +60,7 @@ Look at the calls for the first user...
   
 And now the texts...
   
-  >>> for text in bill.users.values()[0].texts:
+  >>> for text in usage.users.values()[0].texts:
   ...   print text
   <Text> 2010-03-17 13:01:00 from 508-235-6915
   <Text> 2010-03-18 12:04:00 to   508-235-6915
@@ -114,7 +114,7 @@ class Text(object):
     def is_incoming(self):
         return self.incoming
 
-class Attbill(object):
+class AttUsage(object):
     
     def __init__(self):
         self.users = {}

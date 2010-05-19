@@ -5,20 +5,20 @@
     russf@topia.com 
     First release May 2010
 
-    This file is part of ATTBillAnalysis.
+    This file is part of ATTUsageAnalysis.
 
-    ATTBillAnalysis is free software: you can redistribute it and/or modify
+    ATTUsageAnalysis is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    ATTBillAnalysis is distributed in the hope that it will be useful,
+    ATTUsageAnalysis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with ATTBillAnalysis.  If not, see <http://www.gnu.org/licenses/>.
+    along with ATTUsageAnalysis.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import sys
@@ -54,13 +54,13 @@ def main(argv=None):
             if option in ("-d", "--directory"):
                 directory = value
     
-        from attbill import Attbill
+        from attusage import AttUsage
         from report import Report, Directory
-        bill = Attbill()
+        usage = AttUsage()
         for filename in args:   
-            bill.process(filename)
+            usage.process(filename)
         directory = Directory(directory)
-        report = Report(bill, directory=directory)
+        report = Report(usage, directory=directory)
         for line in report.text():
           print line
     

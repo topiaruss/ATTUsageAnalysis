@@ -4,32 +4,32 @@
     russf@topia.com 
     First release May 2010
 
-    This file is part of ATTBillAnalysis.
+    This file is part of ATTUsageAnalysis.
 
-    ATTBillAnalysis is free software: you can redistribute it and/or modify
+    ATTUsageAnalysis is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    ATTBillAnalysis is distributed in the hope that it will be useful,
+    ATTUsageAnalysis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with ATTBillAnalysis.  If not, see <http://www.gnu.org/licenses/>.
+    along with ATTUsageAnalysis.  If not, see <http://www.gnu.org/licenses/>.
 
 Doctests
 --------
 
-Now make a bill, and pass it to a new Report. Handing in a directory
+Now make a usage object, and pass it to a new Report. Handing in a directory
 helps to interpret the traffic report.
 
-    >>> from attbill import Attbill
-    >>> bill = Attbill()
-    >>> bill.process('testreport.csv')
+    >>> from attusage import AttUsage
+    >>> usage = AttUsage()
+    >>> usage.process('testreport.csv')
     >>> directory = Directory('testdir.dir')
-    >>> report = Report(bill, directory=directory)
+    >>> report = Report(usage, directory=directory)
     >>> print report
     <Report>
     >>> for line in report.text():
@@ -94,9 +94,9 @@ class Directory(dict):
         return '<Directory> entries: %s' % len(self)
         
 class Report(object):
-    def __init__(self,bill, directory=None):
+    def __init__(self,usage, directory=None):
         self.directory = directory or {}
-        self.bill=bill
+        self.usage=usage
         self.lines = []
     def __repr__(self):
         return '<Report>'
@@ -113,7 +113,7 @@ class Report(object):
         self.p('Summary By User:')
         self.put_timespan()
         self.p('')
-        for user in self.bill.users.values():
+        for user in self.usage.users.values():
             incalls, outcalls, intexts, outtexts = 0,0,0,0
             parties = {}
             self.p('Name: %s, Number: %s' % (user.name, user.number))
@@ -175,7 +175,7 @@ class Report(object):
         "Finds earliest and latest calls in the report, puts to print buffer"
         earliest = datetime.datetime.now()
         latest = datetime.datetime(2000,1,1)
-        for user in self.bill.users.values():
+        for user in self.usage.users.values():
             for call in user.calls:
                 if call.time < earliest:
                     earliest = call.time
