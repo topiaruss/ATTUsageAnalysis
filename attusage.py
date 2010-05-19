@@ -34,14 +34,14 @@ Create a usage object and read a csv report into it...
   >>> usage = AttUsage()
   >>> usage.process('testreport.csv')
   >>> print usage
-  {'ROGER SMITH': <User> 'ROGER SMITH' at '508-235-7829', 'JANE SMITH': <User> 'JANE SMITH' at '508-235-6915'}
-
+  [<User> 'JANE SMITH' at '508-235-7829', <User> 'ROGER SMITH' at '508-235-6915']
+  
 Show that we have two users on the account...
   
-  >>> for user in usage.users.values():
+  >>> for user in sorted(usage.users.values(), key=lambda u: u.name):
   ...   print user
-  <User> 'ROGER SMITH' at '508-235-7829'
-  <User> 'JANE SMITH' at '508-235-6915'
+  <User> 'JANE SMITH' at '508-235-7829'
+  <User> 'ROGER SMITH' at '508-235-6915'
   
 Look at the calls for the first user...
   
@@ -184,7 +184,7 @@ class AttUsage(object):
         return
             
     def __repr__(self):
-        return str(self.users)
+        return str(sorted(self.users.values(), key=lambda u: u.name))
         
 def maketime(d,t):
     dt = ' '.join((d,t))
