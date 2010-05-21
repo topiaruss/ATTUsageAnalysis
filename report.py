@@ -74,7 +74,7 @@ helps to interpret the traffic report.
 """
 import datetime
 
-EXCHANGE_DURATION = datetime.timedelta(minutes=5)
+EXCHANGE_DURATION = datetime.timedelta(minutes=10)
 def fmt(value):
     return value or ''
     
@@ -160,7 +160,7 @@ class Report(object):
             self.p('                          : From     To  |'\
                                               ' From    To  |'\
                                               '   In   Out')
-            for number, party in sorted(parties.items(), key=lambda i: i[0]):
+            for number, party in sorted(parties.items(), key=lambda i: -(i[1]['fromtexts'] + i[1]['totexts'])):
                 id = self.directory.get(number, '-')
                 self.p('%13s %11s :  %4s  %4s  |'\
                        ' %4s  %4s  |'\
